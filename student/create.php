@@ -4,7 +4,7 @@ include("header.php");
 include("../config.inc");
 
 $fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
-$error_fname = $error_lname = $error_dob = $error_address = "";
+$error_fname = $error_lname = $error_dob = $error_address = $image = "";
 
 $cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
 
@@ -41,9 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
    if ($nerror == 0) {
    		mysql_query ("INSERT INTO students (`fname`,`mname`,`lname`,`dob`,`street`,`suburb`,`postcode`,`cname1`,`crel1`,`cmob1`,`cemail1`,`cname2`,`crel2`,`cmob2`,`cemail2`) VALUES ('$fname','$mname','$lname','$year-$day-$day','$street','$suburb','$postcode', '$cname1', '$crel1', '$cmobile1', '$cemail1', '$cname2', '$crel2', '$cmobile2', '$cemail2')");
+
    		$fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
 		$error_fname = $error_lname = $error_dob = $error_address = "";
 		$cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
+
+
    }
 }
 
@@ -78,7 +81,7 @@ function validateinput($data)
 				echo $error_address;
 				echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
 			} else if ($nerror == 0) {
-				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> Student has been successfully registered.
+				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> $image Student has been successfully registered.
 <a href=\"#close\" class=\"icon-remove\"></a></div>";
 			}
 		?>
@@ -105,11 +108,9 @@ function validateinput($data)
 			</div>
 		</div>
 		<div class="col_4" style="text-align: right;">
-			<ul class="button-bar" style="position: relative; top: -65px; left: 30px">
-			<li><a href=""><i class="icon-remove"></i> Cancel</a></li>
-		</ul>
-			<img src="photo/s12345.jpg" width="60%" height="60%" class="sphoto"/><br />
-			<button class="small"  style="position: relative; top: -25px; width: 60%;"><i class="icon-upload-alt"></i> Upload</button>
+			<img src="photo/s12345.jpg" width="60%" height="60%" /><br />
+			<label for="file" class="btn small" style="position: relative; top: 5px; left: 4px; width: 60%; text-align: center;"><i class="icon-upload-alt" id="upload"></i> Upload</label>
+			<input type="file" name="file" id="file" style="display:none;"><br>
 		</div>
 		<div class="col_6">Contacts</div>
 		<div class="col_12"  style="line-height: 35px;">

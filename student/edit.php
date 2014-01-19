@@ -1,4 +1,61 @@
-<?php include("header.php"); ?>
+<?php 
+
+include("header.php"); 
+include("../config.inc");
+
+$sid = substr($_SERVER['QUERY_STRING'], -5);
+
+$fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
+$error_fname = $error_lname = $error_dob = $error_address = $image = "";
+$cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
+
+$nerror = -1;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+   $nerror = 0;
+
+   $fname = validateinput($_POST["fname"]);
+   $mname = validateinput($_POST["mname"]);
+   $lname = validateinput($_POST["lname"]);
+   $day = validateinput($_POST["day"]);
+   $month = validateinput($_POST["month"]);
+   $year = validateinput($_POST["year"]);
+   $street = validateinput($_POST["street"]);
+   $suburb = validateinput($_POST["suburb"]);
+   $postcode = validateinput($_POST["postcode"]);
+
+   $cname1 = validateinput($_POST["cname1"]);
+   $crel1 = validateinput($_POST["crel1"]);
+   $cmobile1 = validateinput($_POST["cmobile1"]);
+   $cemail1 = validateinput($_POST["cemail1"]);
+
+   $cname2 = validateinput($_POST["cname2"]);
+   $crel2 = validateinput($_POST["crel2"]);
+   $cmobile2 = validateinput($_POST["cmobile2"]);
+   $cemail2 = validateinput($_POST["cemail2"]);
+
+   if ($fname == "") { $error_fname = "<li>First name required.</li>"; $nerror++; }
+   if ($lname == "") { $error_lname = "<li>Family name required.</li>"; $nerror++; }
+   if (!checkdate((int) $day, (int) $month, (int) $year)) { $error_dob = "<li>Invalid birth date.</li>"; $nerror++; }
+   if ($street == "") { $error_address = "<li>Postal Address Required.</li>"; $nerror++; }
+
+   if ($nerror == 0) {
+   		echo "UPDATE students SET `fname`='$fname',`mname`='$mname',`lname`='$lname',`dob`='$year-$day-$day',`street`='$street',`suburb`='$suburb',`postcode`='$postcode',`cname1`='$cname1',`crel1`='$crel1',`cmob1`='$cmobile1',`cemail1`='$cemail1',`cname2`='$cname2',`crel2`='$crel2',`cmob2`='$cmobile2',`cemail2`='$cemail2' WHERE sid = $sid";
+   		mysql_query ("UPDATE students SET `fname`='$fname',`mname`='$mname',`lname`='$lname',`dob`='$year-$day-$day',`street`='$street',`suburb`='$suburb',`postcode`='$postcode',`cname1`='$cname1',`crel1`='$crel1',`cmob1`='$cmobile1',`cemail1`='$cemail1',`cname2`='$cname2',`crel2`='$crel2',`cmob2`='$cmobile2',`cemail2`='$cemail2' WHERE sid = $sid");
+   		header('Location: ?S' . $sid);
+   }
+}
+
+function validateinput($data)
+{
+   $data = trim($data);
+   $data = stripslashes($data);
+   $data = htmlspecialchars($data);
+   return $data;
+}
+
+?>
 	 
 <div class="col_12">
 
@@ -7,73 +64,19 @@
 	</ul>
 
 	<div id="student" class="tab-content">
+	<?php 
+	$sid = substr($_SERVER['QUERY_STRING'], -5);
+    $query = "SELECT * FROM students WHERE sid = $sid";
+    $result = mysql_query($query);
 
-		<div class="col_8" style="line-height: 35px;">
+    if (mysql_num_rows($result) < 1) {
+            echo "Student does not exist.";
+    } else {
+    		$row = mysql_fetch_assoc($result);
+    		include ("edit_form.php");
+    }
 
-			<div class="col_3">
-				Number<br />
-				First Name<br />
-				Middle Name<br />
-				Last Name<br />
-				English Name<br />
-				Date of Birth<br />
-				Address<br /><br /><br />
-
-				
-			
-			</div>
-			<div class="col_5">
-				S98765<br />
-				<input type="text" name="fname" value=""/><br />
-				<input type="text" name="mname" value=""/><br />
-				<input type="text" name="lname" value=""/><br />
-				<input type="text" name="ename" value=""/><br />
-				<input type="text" name="day" placeholder="DD" style="width: 35px !important" value="" /> / <input type="text" name="month" placeholder="MM" style="width: 35px !important" value=""/> / <input type="text" name="year" placeholder="YYYY" style="width: 50px !important" value=""/><br />
-				<input type="text" name="street" value=""/><br />
-				<input type="text" name="suburb" value=""/><br />
-				<input type="text" name="statecode" value=""/>
-			</div>
-		</div>
-		<div class="col_4" style="text-align: right;">
-			<ul class="button-bar" style="position: relative; top: -65px; left: 30px">
-			<li><a href=""><i class="icon-save"></i> Save</a></li>
-			<li><a href=""><i class="icon-remove"></i> Cancel</a></li>
-		</ul>
-			<img src="photo/s12345.jpg" width="60%" height="60%" class="sphoto"/><br />
-			<button class="small"  style="position: relative; top: -25px; width: 60%;"><i class="icon-upload-alt"></i> Upload</button>
-		</div>
-		<div class="col_6">Contacts</div>
-		<div class="col_12"  style="line-height: 35px;">
-
-			<div class="col_2">
-				Name<br />
-				Relationship<br />
-				Mobile<br />
-				Email<br />
-			
-			</div>
-			<div class="col_4">
-				<input type="text" name="cname1" value=""/><br />
-				<input type="text" name="crel1" value=""/><br />
-				<input type="text" name="cmobile1" value=""/><br />
-				<input type="text" name="cemail1" value=""/><br />
-			</div>
-				<div class="col_2">
-				Name<br />
-				Relationship<br />
-				Mobile<br />
-				Email<br />
-			
-			</div>
-			<div class="col_4">
-				<input type="text" name="cname2" value=""/><br />
-				<input type="text" name="crel2" value=""/><br />
-				<input type="text" name="cmobile2" value=""/><br />
-				<input type="text" name="cemail2" value=""/><br />
-			</div>
-		</div>
-		</span>
-		
+    ?>
 	</div>
 </div>
 
