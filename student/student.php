@@ -52,7 +52,7 @@ function tree(num){
 	</div>
 	<div class="col_4" style="text-align: right;">
 		<ul class="button-bar" style="position: relative; top: -65px; left: 30px">
-		<li><a href="edit.php"><i class="icon-pencil"></i> Edit</a></li>
+		<li><a href="edit.php?S<?php echo $sid; ?>"><i class="icon-pencil"></i> Edit</a></li>
 		<li><a href=""><i class="icon-remove"></i> Delete</a></li>
 	</ul>
 		<img src="photo/s12345.jpg" width="60%" class="sphoto"/>
@@ -101,33 +101,39 @@ function tree(num){
 		<th>End:</th>
 		<th>Owe:</th>
 	</tr></thead>
-	<tbody><tr>
-		<td><a href="../enrolment/?1234">E34568</a></td>
-		<td>Grade 5/6</td>
-		<td>Justin Henry</td>
-		<td>05/01/2013</td>
-		<td>12/10/2014</td>
-		<td>$250.00</td>
-	</tr><tr>
-		<td><a href="../enrolment/?1234">E34567</a></td>
-		<td>Grade 5</td>
-		<td>Morgan Malone</td>
-		<td>09/01/2012</td>
-		<td>15/10/2013</td>
-		<td>$0.00</td>
-	</tr><tr>
-		<td><a href="../enrolment/?1234">E34566</a></td>
-		<td>Grade 4</td>
-		<td>Justin Henry</td>
-		<td>10/01/2011</td>
-		<td>12/10/2012</td>
-		<td>$0.00</td>
-	</tr><tr>
-		<td><a href="../enrolment/?1234">E33268</a></td>
-		<td>Grade 3</td>
-		<td>Patrick Hampton</td>
-		<td>06/01/2010</td>
-		<td>12/10/2011</td>
-		<td>$0.00</td>
-	</tr></tbody>
-	</table>
+	<?php
+		$query = sprintf("SELECT * FROM `enrolments` NATURAL JOIN `classes` WHERE sid = $sid");
+		$result = mysql_query($query);
+
+		if (!$result) {
+		    $message  = 'Invalid query: ' . mysql_error() . "\n";
+		    $message .= 'Whole query: ' . $query;
+		    die($message);
+		}
+
+		$fields_num = mysql_num_fields($result);
+
+		if (mysql_num_rows($result) == 0) { echo ""; }
+		
+		else {
+	
+			while($row = mysql_fetch_array($result))
+			{
+				$stime = new DateTime($row['start']);
+				$etime = new DateTime($row['end']);
+				echo "<tr>";
+				echo "<td>
+				<a href='/enrolment?E" . $row['eid'] . "' title='Edit'>E" . $row['eid'] . "</td>
+				<td>" . $row['name'] . "</td>
+				<td>" . $row['teacher'] . "</td>
+				<td>" . $stime->format("d/m/Y") . "</td>
+				<td>" . $etime->format("d/m/Y") . "</td>
+				<td>$" . $row['owe'] . "</td>";
+				
+				echo "</tr>\n";
+			}
+			echo "</table>";
+		
+		}
+		mysql_free_result($result);
+	?>

@@ -71,6 +71,6 @@
 				<input type="text" name="cmobile2" value='<?php echo $row['cmob2']; ?>'/><br />
 				<input type="email" name="cemail2" value='<?php echo $row['cemail2']; ?>'/><br />
 			</div>
-		<button type="submit" class="medium" style="margin-top: 15px;"><i class="icon-save"></i> Save</button>
+		<button type="submit" class="medium" style="margin-top: 15px;"><i class="icon-save"></i> Save</button>  <a href="../student/?S<?php echo $row['sid']; ?>"><button type="button" class="medium" style="margin-top: 15px;">Cancel</button></a>
 		</div>
 	</form>	
