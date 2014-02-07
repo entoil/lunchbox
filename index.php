@@ -1,53 +1,76 @@
-<?php include("header.php"); ?>
-	 
-<div class="col_12">
-	<div class="col_9">
-	<h4>Welcome to Lunchbox</h4>
-	<p><img class="align-left" src="http://placehold.it/180x150/4D99E0/ffffff.png&text=180x150" width="180" height="150" />
-	Lorem ipsum dolor sit amet, consectetuer <em>adipiscing elit</em>, sed diam nonummy nibh euismod 
-	tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis 
-	nostrud exerci tation <strong>ullamcorper suscipit lobortis</strong> nisl ut aliquip ex ea commodo consequat. 
-	Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat</p>
+<?php include("header.php");  include("config.inc"); ?>
+<?php
 
-	<p>El illum dolore eu <span class="icon" data-icon="2"></span> feugiat nulla facilisis at vero eros et accumsan et iusto odio 
-	dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam 
-	liber tempor cum soluta nobis eleifend <code>&lt;h1&gt;Sample Code&lt;/h1&gt;</code> option 
-	congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>
+if (isset($_SESSION['username'])) {
 	
-	<p>
-	Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore 
-	magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis 
-	nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse 
-	molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim 
-	qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum 
-	soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>
-	</div>
-	
-	<div class="col_3">
-	<h5>Icon List</h5>
-	<ul class="icons">
-	<li><i class="icon-ok"></i> Apple</li>
-	<li><i class="icon-ok"></i> Banana</li>
-	<li><i class="icon-ok"></i> Orange</li>
-	<li><i class="icon-ok"></i> Pear</li>
-	</ul>
-	
-	<h5>Sample Icons</h5>
-	<i class="icon-twitter-sign icon-4x"></i> 
-	<i class="icon-facebook-sign icon-4x"></i>
-	<i class="icon-linkedin-sign icon-4x"></i>
-	<i class="icon-github-sign icon-4x"></i>
-	
-	<span class="icon social x-large darkgray" data-icon="1"></span>
-	<span class="icon social x-large black" data-icon="w"></span>
-	<span class="icon x-large pink" data-icon="*"></span>
-	<span class="icon social x-large green" data-icon="v"></span>
-	
-	<h5>Button w/Icon</h5>
-	<a class="button orange small" href="#"><i class="icon-rss"></i> RSS</a>
-	</div>
+	header('Location: portal.php');
+}
+
+$user = $pass = "";
+
+$error_user = $error_pass = $error_combo = "";
+
+$nerror = -1;	
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+   $nerror = 0;
+
+   $user = validateinput($_POST["user"]);
+   $pass = validateinput($_POST["pass"]);
+
+   if ($user == "") { $error_user = "<li>Username required.</li>"; $nerror++; }
+   if ($pass == "") { $error_pass = "<li>Password required.</li>"; $nerror++; }
+   echo "SELECT * FROM users WHERE username = '$user' and password = '$pass'";
+
+   $result = mysql_query("SELECT * FROM `users` WHERE username = '$user' and password = '$pass'");
+	//if(!$result) die ('Unable to run query:'.mysql_error());
+   if (mysql_num_rows($result) == 1) {
+		$row = mysql_fetch_assoc($result);
+		$_SESSION['username'] = $row['username'];
+		header('Location: portal.php');
+   } else  { $error_combo = "<li>Invalid username or password.</li>"; $nerror++; }
+}
+
+function validateinput($data)
+{
+   $data = trim($data);
+   $data = stripslashes($data);
+   $data = htmlspecialchars($data);
+   return $data;
+}
+
+?>
+
+<div class="col_3">	</div>
+<div class="col_5">
+
+	<p><br /><br /><br /><br />
+		<?php 
+			if ($nerror > 0) { 
+				echo "<div class=\"notice error\" ><i class=\"icon-remove-sign icon-large\" ></i>Please correct the following error(s):";
+				echo $error_user;
+				echo $error_pass;
+				echo $error_combo;
+				echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
+			} else if ($nerror == 0) {
+				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> Student successfully modified.
+<a href=\"#close\" class=\"icon-remove\"></a></div>";
+			}
+		?>
+	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" name="form"> 
+    <table cellspacing='0' cellpadding='4'>
+    <tr><td>Username:</td><td><input type="text" name="user" size="18" maxlength="25" value='<?php echo $user; ?>' required ></td></tr>
+    <tr><td>Password:</td><td><input type="password" name="pass" size="18" maxlength="25" required></td></tr>
+    </table>
+    <br />
+   	<table>
+    <tr><td><input type="submit" style="margin-left:0" value="Log In"></td>
+    </table>
+	</form>
+
+	</p><br /><br /><br /><br />
 	
 	
 </div>
-
-<?php include("footer.php"); ?>
+<div class="col_4">	</div>
