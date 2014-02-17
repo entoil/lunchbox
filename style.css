@@ -161,8 +161,9 @@ display:block;
 	z-index:1001;
 }
 
-.sphoto {
+.seditbutton {
 	 position: relative; 
-	 top: -50px;
+	 top: -257px;
+	 left: 27px;
 	 border: 1px solid #CCC;
 }

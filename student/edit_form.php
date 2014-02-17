@@ -1,4 +1,4 @@
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); echo "?S" . $sid;?>"> 
+<form method="post" enctype="multipart/form-data" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); echo "?S" . $sid;?>"> 
 		<div class="col_8" style="line-height: 35px;">
 		<?php 
 			if ($nerror > 0) { 
@@ -38,7 +38,15 @@
 			</div>
 		</div>
 		<div class="col_4" style="text-align: right;">
-			<img src="photo/s12345.jpg" width="60%" height="60%" /><br />
+			<?php
+
+				if (file_exists("photo/" . $sid . ".jpg")) {
+					echo "<img src=\"photo/" . $sid . ".jpg\" width=\"60%\" height=\"60%\" /><br />";
+				} else {
+					echo "<img src=\"photo/s12345.jpg\" width=\"60%\" height=\"60%\" /><br />";
+				}
+
+			?>
 			<label for="file" class="btn small" style="position: relative; top: 5px; left: 4px; width: 60%; text-align: center;"><i class="icon-upload-alt" id="upload"></i> Upload</label>
 			<input type="file" name="file" id="file" style="display:none;"><br>
 		</div>
@@ -71,6 +79,6 @@
 				<input type="text" name="cmobile2" value='<?php echo $row['cmob2']; ?>'/><br />
 				<input type="email" name="cemail2" value='<?php echo $row['cemail2']; ?>'/><br />
 			</div>
-		<button type="submit" class="medium" style="margin-top: 15px;"><i class="icon-save"></i> Save</button>  <a href="../student/?S<?php echo $row['sid']; ?>"><button type="button" class="medium" style="margin-top: 15px;">Cancel</button></a>
+		<button type="submit" class="medium" name="submit" style="margin-top: 15px;" value="Submit"><i class="icon-save"></i> Save</button>  <a href="../student/?S<?php echo $row['sid']; ?>"><button type="button" class="medium" style="margin-top: 15px;">Cancel</button></a>
 		</div>
 	</form>	

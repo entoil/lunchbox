@@ -2,7 +2,7 @@
 
 include("header.php"); 
 include("../config.inc");
-
+if ($_SESSION['type'] != 0) { header('Location: ..'); }
 $eid = substr($_SERVER['QUERY_STRING'], -3);
 
 $sday = $smonth = $syear = $eday = $emonth = $eyear = $owe = "";

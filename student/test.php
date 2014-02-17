@@ -43,6 +43,8 @@ else
   }
 }
 }
+
+if (isset($_FILES["file"])) { echo "Set"; print_r($_FILES);} else {echo "Unset";  print_r($_FILES);}
 ?>
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post"

@@ -1,0 +1,57 @@
+------------------------------------------------------------
+	DATABASE STRUCTURE
+------------------------------------------------------------
+
+students
+	Students of school
+	| sid
+	| fname
+	| mname
+	| lname
+	| ename
+	| dob
+	| address
+	| photo
+	| cname1 . 2
+	| cnumber1 . 2
+	| crel1 . 2
+	| cemail1 . 2
+
+enrolments
+	Student's enrolments
+	| eid
+	| sid * students
+	| cid * classes
+	| start
+	| end
+	| owe
+
+documents
+	Student documents
+	| did
+	| sid * student
+	| name
+	| uploaded
+	| uploader
+	| notes
+
+classes
+	School's classes
+	| cid
+	| name
+	| teacher
+
+saudits
+	Student audit log
+	| said
+	| type
+	| description
+	| by
+
+caudits
+	Class audit log
+	| caid
+	| type
+	| description
+	| date
+	| by

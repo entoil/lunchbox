@@ -1,8 +1,10 @@
 <?php 
 
+
+
 include("header.php"); 
 include("../config.inc");
-
+if ($_SESSION['type'] != 0) { header('Location: ..'); }
 $sid = substr($_SERVER['QUERY_STRING'], -5);
 
 $fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
@@ -13,6 +15,47 @@ $nerror = -1;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
+  if(isset($_FILES["file"])){
+    $allowedExts = array("gif", "jpeg", "jpg", "png");
+    $temp = explode(".", $_FILES["file"]["name"]);
+    $extension = end($temp);
+    if ((($_FILES["file"]["type"] == "image/gif")
+    || ($_FILES["file"]["type"] == "image/jpeg")
+    || ($_FILES["file"]["type"] == "image/jpg")
+    || ($_FILES["file"]["type"] == "image/pjpeg")
+    || ($_FILES["file"]["type"] == "image/x-png")
+    || ($_FILES["file"]["type"] == "image/png"))
+    && in_array($extension, $allowedExts))
+      {
+      if ($_FILES["file"]["error"] > 0)
+        {
+        echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
+        }
+      else
+        {
+        echo "Upload: " . $_FILES["file"]["name"] . "<br>";
+        echo "Type: " . $_FILES["file"]["type"] . "<br>";
+        echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+        echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
+
+        if (file_exists("photo/" . $_FILES["file"]["name"]))
+          {
+          echo $_FILES["file"]["name"] . " already exists. ";
+          }
+        else
+          {
+          move_uploaded_file($_FILES["file"]["tmp_name"],
+          "photo/" . $sid . ".jpg");
+          echo "Stored in: " . "photo/" . $_FILES["file"]["name"];
+          }
+        }
+      }
+    else
+      {
+      echo "Invalid file";
+      }
+    }
+    
    $nerror = 0;
 
    $fname = validateinput($_POST["fname"]);
@@ -39,6 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    if ($lname == "") { $error_lname = "<li>Family name required.</li>"; $nerror++; }
    if (!checkdate((int) $month, (int) $day, (int) $year)) { $error_dob = "<li>Invalid birth date.</li>"; $nerror++; }
    if ($street == "") { $error_address = "<li>Postal Address Required.</li>"; $nerror++; }
+
+    
 
    if ($nerror == 0) {
    		echo "UPDATE students SET `fname`='$fname',`mname`='$mname',`lname`='$lname',`dob`='$year-$month-$day',`street`='$street',`suburb`='$suburb',`postcode`='$postcode',`cname1`='$cname1',`crel1`='$crel1',`cmob1`='$cmobile1',`cemail1`='$cemail1',`cname2`='$cname2',`crel2`='$crel2',`cmob2`='$cmobile2',`cemail2`='$cemail2' WHERE sid = $sid";

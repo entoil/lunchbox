@@ -50,10 +50,9 @@
 				</div>
 		</div>
 		<div class="col_4" style="text-align: right;">
-			<ul class="button-bar" style="position: relative; top: -65px; left: 30px">
-			<li><a href="edit.php?E<?php echo $eid; ?>"><i class="icon-pencil"></i> Edit</a></li>
-			<li><a href=""><i class="icon-remove"></i> Delete</a></li>
-		</ul>
+
+			<a href="edit.php?E<?php echo $eid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
+			<a href="delete.php?E<?php echo $eid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-remove" ></i> Cancel</button></a>
 			
 		</div>
 

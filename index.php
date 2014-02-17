@@ -1,8 +1,7 @@
 <?php include("header.php");  include("config.inc"); ?>
 <?php
-
+session_start();
 if (isset($_SESSION['username'])) {
-	
 	header('Location: portal.php');
 }
 
@@ -21,13 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 
    if ($user == "") { $error_user = "<li>Username required.</li>"; $nerror++; }
    if ($pass == "") { $error_pass = "<li>Password required.</li>"; $nerror++; }
-   echo "SELECT * FROM users WHERE username = '$user' and password = '$pass'";
-
    $result = mysql_query("SELECT * FROM `users` WHERE username = '$user' and password = '$pass'");
 	//if(!$result) die ('Unable to run query:'.mysql_error());
    if (mysql_num_rows($result) == 1) {
 		$row = mysql_fetch_assoc($result);
 		$_SESSION['username'] = $row['username'];
+		$_SESSION['type'] = $row['type'];
 		header('Location: portal.php');
    } else  { $error_combo = "<li>Invalid username or password.</li>"; $nerror++; }
 }

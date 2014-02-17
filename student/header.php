@@ -1,3 +1,9 @@
+<?php
+include("../config.inc");
+session_start();
+if (!isset($_SESSION['username'])) { header('Location: ..'); }
+?>
+
 <!DOCTYPE html>
 <html><head>
 <title>Lunchbox</title>
@@ -15,15 +21,39 @@
 <ul class="menu">
 <li><a href=""><span class="icon" data-icon="R"></span>Lunchbox</a>
 	<ul>
-	<li><a href=""><span class="icon" data-icon="G"></span>Class Roles</a></li>
-	<li><a href=""><span class="icon" data-icon="A"></span>New</a>
+	<li><a href=""><span class="icon" data-icon="G"></span>Report</a>
 		<ul>
-		<li><a href="create.php"><span class="icon" data-icon="Z"></span>Student</a></li>
-		<li><a href=""><span class="icon" data-icon="k"></span>Enrolment</a></li>
-		<li><a href=""><span class="icon" data-icon="J"></span>Class</a></li>
+		<li><a href="/report/starters.php"><span class="icon" data-icon="k"></span>Starters</a></li>
+		<li><a href="/report/finishers.php"><span class="icon" data-icon="k"></span>Finishers</a></li>
 		</ul>
 	</li>
-	<li class="divider"><a href=""><span class="icon" data-icon="T"></span>Logout</a></li>
+	<li><a href=""><span class="icon" data-icon="A"></span>Class</a>
+		<ul>
+		<li><a href="/class/"><span class="icon" data-icon="T"></span>Class List</a></li>
+		<li class="divider">
+
+		<?php
+		$query = sprintf("SELECT * FROM `classes`;");
+		$result = mysql_query($query);
+	
+		while($row = mysql_fetch_array($result))
+		{
+			echo "<a href='/class/?C" . $row['cid'] . "'>" . $row['name'] . "</a></li><li>";
+			echo "</li>";
+		}		
+		mysql_free_result($result);
+		?>
+
+		</ul>
+	</li>
+	<li><a href=""><span class="icon" data-icon="A"></span>New</a>
+		<ul>
+		<li><a href="/student/create.php"><span class="icon" data-icon="Z"></span>Student</a></li>
+		<li><a href="/enrolment/create.php"><span class="icon" data-icon="k"></span>Enrolment</a></li>
+		<li><a href="/class/create.php"><span class="icon" data-icon="J"></span>Class</a></li>
+		</ul>
+	</li>
+	<li class="divider"><a href="logout.php"><span class="icon" data-icon="T"></span>Logout</a></li>
 	</ul>
 </li>
 </ul>

@@ -51,11 +51,17 @@ function tree(num){
 			</div>
 	</div>
 	<div class="col_4" style="text-align: right;">
-		<ul class="button-bar" style="position: relative; top: -65px; left: 30px">
-		<li><a href="edit.php?S<?php echo $sid; ?>"><i class="icon-pencil"></i> Edit</a></li>
-		<li><a href=""><i class="icon-remove"></i> Delete</a></li>
-	</ul>
-		<img src="photo/s12345.jpg" width="60%" class="sphoto"/>
+		 <?php
+
+				if (file_exists("photo/" . $sid . ".jpg")) {
+					echo "<img src=\"photo/" . $sid . ".jpg\" width=\"60%\" height=\"60%\" /><br />";
+				} else {
+					echo "<img src=\"photo/s12345.jpg\" width=\"60%\" height=\"60%\" /><br />";
+				}
+
+			?><br>
+		 <a href="edit.php?S<?php echo $sid; ?>"><button class="medium seditbutton" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit Student</button></a>
+
 	</div>
 	<div class="col_6"><span onclick="tree(0);"><i class="icon-plus-sign-alt"></i> Contacts</span></div>
 	<span id="menu0" style="display:none;">
