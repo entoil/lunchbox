@@ -21,8 +21,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    if ($teacher == "") { $error_teacher = "<li>Teacher required.</li>"; $nerror++; }
 
    if ($nerror == 0) {
-      mysql_query ("UPDATE classes SET `name` = '$name',`teacher` = '$teacher' WHERE cid = $cid");
       
+      $username = $_SESSION['username'];
+      $query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+      $row = mysql_fetch_array($query);
+      $user = $row['name'];
+
+      $query = "SELECT * FROM classes WHERE cid = $cid";
+      $result = mysql_query($query);
+      $row = mysql_fetch_assoc($result);
+      $original_name = $row['name'];
+      $original_teacher = $row['teacher'];
+
+      if ($original_name != $name) {
+        mysql_query ("INSERT INTO `lunchbox`.`caudits` (`cid`, `type`, `description`, `date`, `by`) VALUES ($cid, 'Name', 'Class name changed from $original_name to $name', DATE(NOW()), '$user');");
+      }
+
+      if ($original_teacher != $teacher) {
+        mysql_query ("INSERT INTO `lunchbox`.`caudits` (`cid`, `type`, `description`, `date`, `by`) VALUES ($cid, 'Teacher', 'Changed from $original_teacher to $teacher', DATE(NOW()), '$user');");
+      }
+
+      mysql_query ("UPDATE classes SET `name` = '$name',`teacher` = '$teacher' WHERE cid = $cid");
+
       header('Location: /class/?C' . $cid);
 
 

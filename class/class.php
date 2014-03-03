@@ -1,6 +1,6 @@
 <?php 
 
-	$cid = substr($_SERVER['QUERY_STRING'], 1);
+
 	$error = "";
 
 	$query = sprintf("SELECT * FROM `classes` WHERE cid = '" . $cid . "';");
@@ -34,7 +34,6 @@
 		<div class="col_4" style="text-align: right;">
 
 			<a href="edit.php?C<?php echo $cid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
-			<a href="delete.php?C<?php echo $cid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-remove" ></i> Cancel</button></a>
 			
 		</div>
 

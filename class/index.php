@@ -4,7 +4,13 @@
 
 	<ul class="tabs left">
 	<li><a href="#class">Class</a></li>
-	<li><a href="#audit">Audit</a></li>
+	<?php
+	if (strlen($_SERVER['QUERY_STRING']) > 0) {
+		echo "<li><a href=\"#audit\">Audit</a></li>";
+		$cid = substr($_SERVER['QUERY_STRING'], 1);
+	}	
+	?>
+	
 	</ul>
 
 	<div id="class" class="tab-content">
@@ -22,7 +28,7 @@
 
 	</div>
 	<div id="audit" class="tab-content">
-
+		<?php include ('audit.php'); ?>
 	</div>
 </div>
 

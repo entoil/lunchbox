@@ -3,10 +3,8 @@
 include("header.php"); 
 include("../config.inc");
 
-$fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
-$error_fname = $error_lname = $error_dob = $error_address = $image = "";
-
-$cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
+$student = $class = $sday = $smonth = $syear = $eday = $emonth = $eyear = $owe = "";
+$error_student = $error_class = $error_start = $error_end = $error_invalid = $error_owe = $error_exist = "";
 
 $nerror = -1;
 
@@ -14,38 +12,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
    $nerror = 0;
 
-   $fname = validateinput($_POST["fname"]);
-   $mname = validateinput($_POST["mname"]);
-   $lname = validateinput($_POST["lname"]);
-   $day = validateinput($_POST["day"]);
-   $month = validateinput($_POST["month"]);
-   $year = validateinput($_POST["year"]);
-   $street = validateinput($_POST["street"]);
-   $suburb = validateinput($_POST["suburb"]);
-   $postcode = validateinput($_POST["postcode"]);
+   $student = validateinput($_POST["student"]);
+   $class = validateinput($_POST["class"]);
+   $sday = validateinput($_POST["sday"]);
+   $smonth = validateinput($_POST["smonth"]);
+   $syear = validateinput($_POST["syear"]);
+   $eday = validateinput($_POST["eday"]);
+   $emonth = validateinput($_POST["emonth"]);
+   $eyear = validateinput($_POST["eyear"]);
+   $owe = validateinput($_POST["owe"]);
 
-   $cname1 = validateinput($_POST["cname1"]);
-   $crel1 = validateinput($_POST["crel1"]);
-   $cmobile1 = validateinput($_POST["cmobile1"]);
-   $cemail1 = validateinput($_POST["cemail1"]);
+	$query = "SELECT * FROM students WHERE sid = $student";
+    $result = mysql_query($query);
 
-   $cname2 = validateinput($_POST["cname2"]);
-   $crel2 = validateinput($_POST["crel2"]);
-   $cmobile2 = validateinput($_POST["cmobile2"]);
-   $cemail2 = validateinput($_POST["cemail2"]);
+   if ($student == "") { $error_student = "<li>Student number required.</li>"; $nerror++; } else if (mysql_num_rows($result) < 1) { $error_exist = "<li>Student does not exist.</li>"; $nerror++; }
+   if ($class == "") { $error_class = "<li>Class selection required.</li>"; $nerror++; }
+   if (!checkdate((int) $smonth, (int) $sday, (int) $syear)) { $error_start = "<li>Invalid start date.</li>"; $nerror++; }
+   if (!checkdate((int) $emonth, (int) $eday, (int) $eyear)) { $error_end = "<li>Invalid end date.</li>"; $nerror++; }
+   if ((int) $syear >= (int) $eyear && (int) $smonth >= (int) $emonth && (int) $sday >= (int) $eday) { $error_invalid = "<li>Start date must be before end date.</li>"; $nerror++; }
+   if ($owe == "") { $owe = "0.00"; }
 
-   if ($fname == "") { $error_fname = "<li>First name required.</li>"; $nerror++; }
-   if ($lname == "") { $error_lname = "<li>Family name required.</li>"; $nerror++; }
-   if (!checkdate((int) $month, (int) $day, (int) $year)) { $error_dob = "<li>Invalid birth date.</li>"; $nerror++; }
-   if ($street == "") { $error_address = "<li>Postal Address Required.</li>"; $nerror++; }
+   if (!preg_match('/^[0-9]+(?:\.[0-9]+)?$/', $owe))
+    {
+        $error_owe = "<li>Invaid owe amount.</li>"; $nerror++; 
+    }
 
    if ($nerror == 0) {
-   		mysql_query ("INSERT INTO students (`fname`,`mname`,`lname`,`dob`,`street`,`suburb`,`postcode`,`cname1`,`crel1`,`cmob1`,`cemail1`,`cname2`,`crel2`,`cmob2`,`cemail2`) VALUES ('$fname','$mname','$lname','$year-$month-$day','$street','$suburb','$postcode', '$cname1', '$crel1', '$cmobile1', '$cemail1', '$cname2', '$crel2', '$cmobile2', '$cemail2')");
+   		$sid = $student;
+   		mysql_query ("INSERT INTO enrolments (`sid`,`cid`,`start`,`end`,`owe`) VALUES ( $student , $class,'$syear-$smonth-$sday','$eyear-$emonth-$eday','$owe')");
 
-   		$fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
-		$error_fname = $error_lname = $error_dob = $error_address = "";
-		$cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
-
+   		$student = $class = $sday = $smonth = $syear = $eday = $emonth = $eyear = $owe = "";
+		$error_student = $error_class = $error_start = $error_end = $error_invalid = $error_owe = $error_exist = "";
 
    }
 }
@@ -75,74 +72,55 @@ function validateinput($data)
 		<?php 
 			if ($nerror > 0) { 
 				echo "<div class=\"notice error\" ><i class=\"icon-remove-sign icon-large\" ></i>Please correct the following error(s):";
-				echo $error_fname;
-				echo $error_lname;
-				echo $error_dob;
-				echo $error_address;
+				echo $error_student;
+				echo $error_exist;
+				echo $error_class;
+				echo $error_start;
+				echo $error_end;
+				echo $error_invalid;
+				echo $error_owe;
 				echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
 			} else if ($nerror == 0) {
-				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> $image Student has been successfully registered.
+				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> Enrolment successfully created for student <a href='/student/?S" . $sid . "'>S" . $sid . "</a>.
 <a href=\"#close\" class=\"icon-remove\"></a></div>";
 			}
 		?>
 		
 
 			<div class="col_3">
-				First Name<br />
-				Middle Name<br />
-				Last Name<br />
-				Date of Birth<br />
-				Address<br /><br /><br />
+				Student<br />
+				Class<br />
+				Start<br />
+				End<br />
+				Owing<br /><br />
 
 				
 			
 			</div>
 			<div class="col_5">
-				<input type="text" name="fname" value=<?php echo "'$fname'"; ?>/><br />
-				<input type="text" name="mname" value=<?php echo "'$mname'"; ?>/><br />
-				<input type="text" name="lname" value=<?php echo "'$lname'"; ?>/><br />
-				<input type="text" name="day" maxlength="2" placeholder="DD" style="width: 35px !important" value=<?php echo "'$day'"; ?> /> / <input type="text" name="month" maxlength="2" placeholder="MM" style="width: 35px !important" value=<?php echo "'$month'"; ?>/> / <input type="text" name="year" maxlength="4" placeholder="YYYY" style="width: 50px !important" value=<?php echo "'$year'"; ?>/><br />
-				<input type="text" name="street" value=<?php echo "'$street'"; ?>/><br />
-				<input type="text" name="suburb" value=<?php echo "'$suburb'"; ?>/><br />
-				<input type="text" name="postcode" value=<?php echo "'$postcode'"; ?>/>
-			</div>
-		</div>
-		<div class="col_4" style="text-align: right;">
-			<img src="photo/s12345.jpg" width="60%" height="60%" /><br />
-			<label for="file" class="btn small" style="position: relative; top: 5px; left: 4px; width: 60%; text-align: center;"><i class="icon-upload-alt" id="upload"></i> Upload</label>
-			<input type="file" name="file" id="file" style="display:none;"><br>
-		</div>
-		<div class="col_6">Contacts</div>
-		<div class="col_12"  style="line-height: 35px;">
+				S <input type="text" name="student" style="width: 70px !important" value='<?php echo $student; ?>'/><br />
+				<select name="class">
+				<option value="">Select Class</option>
+				<?php
+				$query = sprintf("SELECT * FROM `classes`;");
+				$result = mysql_query($query);
 
-			<div class="col_2">
-				Name<br />
-				Relationship<br />
-				Phone<br />
-				Email<br />
-			
+				while($row = mysql_fetch_array($result))
+				{
+					echo "<option value=\"". $row['cid'] . "\">" . $row['name'] . "</option>";
+				}		
+				mysql_free_result($result);
+				?>		
+				</select>
+				<br />
+				<input type="text" name="sday" maxlength="2" placeholder="DD" style="width: 35px !important" value='<?php echo $sday; ?>' /> / <input type="text" name="smonth" maxlength="2" placeholder="MM" style="width: 35px !important" value='<?php echo $smonth; ?>'/> / <input type="text" name="syear" maxlength="4" placeholder="YYYY" style="width: 50px !important" value='<?php echo $syear; ?>'/><br />
+				<input type="text" name="eday" maxlength="2" placeholder="DD" style="width: 35px !important" value='<?php echo $eday; ?>' /> / <input type="text" name="emonth" maxlength="2" placeholder="MM" style="width: 35px !important" value='<?php echo $emonth; ?>'/> / <input type="text" name="eyear" maxlength="4" placeholder="YYYY" style="width: 50px !important" value='<?php echo $eyear; ?>'/><br />
+				$ <input type="text" name="owe" style="width: 70px !important" value='<?php echo $owe; ?>'/><br />
 			</div>
-			<div class="col_4">
-				<input type="text" name="cname1" value=<?php echo "'$cname1'"; ?>/><br />
-				<input type="text" name="crel1" value=<?php echo "'$crel1'"; ?>/><br />
-				<input type="text" name="cmobile1" value=<?php echo "'$cmobile1'"; ?>/><br />
-				<input type="email" name="cemail1" value=<?php echo "'$cemail1'"; ?>/><br />
-			</div>
-				<div class="col_2">
-				Name<br />
-				Relationship<br />
-				Phone<br />
-				Email<br />
-			
-			</div>
-			<div class="col_4">
-				<input type="text" name="cname2" value=<?php echo "'$cname2'"; ?>/><br />
-				<input type="text" name="crel2" value=<?php echo "'$crel2'"; ?>/><br />
-				<input type="text" name="cmobile2" value=<?php echo "'$cmobile2'"; ?>/><br />
-				<input type="email" name="cemail2" value=<?php echo "'$cemail2'"; ?>/><br />
-			</div>
-		<button type="submit" class="medium" style="margin-top: 15px;"><i class="icon-save"></i> Save</button>
+		<div class="col_12"  style="line-height: 35px;">
+		<button type="submit" class="medium" style="margin-top: 15px;"><i class="icon-save"></i> Save</button> <a href="../enrolment/?E<?php echo $row['eid']; ?>"><button type="button" class="medium" style="margin-top: 15px;">Cancel</button></a>
 		</div>
+
 	</form>	
 	</div>
 </div>

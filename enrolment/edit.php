@@ -22,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    $eyear = validateinput($_POST["eyear"]);
    $owe = validateinput($_POST["owe"]);
 
-   if (!checkdate((int) $smonth, (int) $sday, (int) $syear)) { $error_start = "<li>First name required.</li>"; $nerror++; }
-   if (!checkdate((int) $emonth, (int) $eday, (int) $eyear)) { $error_end = "<li>Family name required.</li>"; $nerror++; }
-   if ((int) $syear >= (int) $syear && (int) $smonth >= (int) $emonth && (int) $eday >= (int) $eday) { $error_invalid = "<li>Start date must be before end date.</li>"; $nerror++; }
+   if (!checkdate((int) $smonth, (int) $sday, (int) $syear)) { $error_start = "<li>Invalid start date.</li>"; $nerror++; }
+   if (!checkdate((int) $emonth, (int) $eday, (int) $eyear)) { $error_end = "<li>Invalid end date.</li>"; $nerror++; }
+   if ((int) $syear >= (int) $eyear && (int) $smonth >= (int) $emonth && (int) $sday >= (int) $eday) { $error_invalid = "<li>Start date must be before end date.</li>"; $nerror++; }
    if ($owe == "") { $owe = "0.00"; }
 
    if (!preg_match('/^[0-9]+(?:\.[0-9]+)?$/', $owe))

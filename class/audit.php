@@ -83,19 +83,6 @@ $row = mysql_fetch_array($result);
 			</div>
 	</div>
 
-		<div class="col_12">
-		<span onclick="tree(1);"> <i class="icon-plus-sign-alt"></i> Add Audit</span>
-		<span id="menu1" style="display:none;">
-		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);echo "?S" . $sid . "#documents";?>" method="post"
-		enctype="multipart/form-data">
-		<br /><label for="file" class="btn small" ><i class="icon-upload-alt" id="upload"></i> Upload</label>
-		<input type="text" name="notes" style="width: 60%;" placeholder="Description">
-		<input type="file" name="file" id="file" style="display:none;" required> 
-		<button type="submit" class="btn small" name="submit"  value="Submit">Save</button>  
-		</form>
-		</span><br /><br />
-		</div>
-
 		<table cellspacing="0" cellpadding="0">
 		<thead><tr>
 			<th>Type</th>
@@ -107,7 +94,7 @@ $row = mysql_fetch_array($result);
 		<tbody>
 
 		<?php
-		$query = sprintf("SELECT * FROM `caudits` WHERE cid = '$cid';");
+		$query = sprintf("SELECT * FROM `caudits` WHERE cid = '$cid' ORDER BY caid DESC;");
 		$result = mysql_query($query);
 
 		if (!$result) {
