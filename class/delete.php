@@ -3,7 +3,7 @@
 session_start();
 include("header.php");
 include("../config.inc");
-
+if ($_SESSION['type'] != 0) { header('Location: ..'); }
 ?>
 <?php
 

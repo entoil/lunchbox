@@ -1,3 +1,16 @@
+<?php include("header.php"); include("../config.inc"); ?>
+
+<div class="col_12">
+
+	<ul class="tabs left">
+	<li><a href="/student/?S<?php echo $sid?>">Student</a></li>
+	<li><a href="document.php?S<?php echo $sid?>">Documents</a></li>
+	<li  class="current"><a href="audit.php?S<?php echo $sid?>">Audit</a></li>
+	</ul>
+
+	<div id="audit" class="tab-content">
+
+
 <script>
 flag = new Array();
 function tree(num){
@@ -18,14 +31,16 @@ $nerror = -1;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$nerror = 0;
+
+	$type = validateinput($_POST["type"]);
+	$description = validateinput($_POST["description"]);
+
 	$username = $_SESSION['username'];
 	$query = mysql_query("SELECT * FROM users WHERE username = '$username'");
 	$row = mysql_fetch_array($query);
-	$uploader = $row['name'];
-	$notes = validateinput($_POST["notes"]);
+	$user = $row['name'];
+	mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, '$type', '$description', DATE(NOW()), '$user');");
 
-
-      mysql_query ("INSERT INTO documents (`sid`,`name`, `uploaded`, `uploader`, `notes`) VALUES ($sid, '$name', DATE(NOW()), '$uploader', '$notes')");
 }
 
 
@@ -36,61 +51,43 @@ function validateinput($data)
    $data = htmlspecialchars($data);
    return $data;
 }
-?>
 
-<?php 
-			if ($nerror > 0) { 
-				echo "<div class=\"notice error\" ><i class=\"icon-remove-sign icon-large\" ></i>";
-				echo $error_exist;
+		if ($nerror > 0) { 
+			echo "<div class=\"notice error\" ><i class=\"icon-remove-sign icon-large\" ></i>";
+			echo $error_exist;
+			echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
+		} else if ($nerror == 0) {
+			echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i>  Audit successfully documented.
+			<a href=\"#close\" class=\"icon-remove\"></a></div>";
+		}
 
-				echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
-			} else if ($nerror == 0) {
-				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> Document successfully uploaded.
-<a href=\"#close\" class=\"icon-remove\"></a></div>";
-			}
+		$query = sprintf("SELECT * FROM `students` WHERE sid = '" . $sid . "';");
+		$result = mysql_query($query);
+		$row = mysql_fetch_array($result);
 		?>
-<?php 
-
-
-$error = "";
-
-$query = sprintf("SELECT * FROM `classes` WHERE cid = '" . $cid . "';");
-$result = mysql_query($query);
-$row = mysql_fetch_array($result);
-
-
-?>
-
-	<div class="col_8"  style="line-height: 35px;">
+		<div class="col_8">
 
 		<div class="col_3">
-				Class<br />
-				Teacher<br />
-				Students<br />
-
-				
-			
-			</div>
-			<div class="col_8">
-				<?php echo $row['name']; ?><br />
-				<?php echo $row['teacher']; ?> <br />
-				<?php  
-					$query = sprintf("SELECT COUNT(*) as 'count' FROM enrolments WHERE cid = $cid AND start <= DATE(NOW()) AND end >= DATE(NOW());");
-					$result = mysql_query($query);
-					$row = mysql_fetch_array($result);
-					echo $row['count'];
-				?> 
-			</div>
-	</div>
+		Number<br />
+		Name<br />			
+		</div>
+		<div class="col_5">
+		S<?php echo $sid ?><br />
+		<?php echo $row['fname'] . " " . $row['mname'] . " " . $row['lname'];?><br />
+		</div>
+		</div>
 
 		<div class="col_12">
-		<span onclick="tree(1);"> <i class="icon-plus-sign-alt"></i> Add Audit</span>
-		<span id="menu1" style="display:none;">
-		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);echo "?S" . $sid . "#documents";?>" method="post"
+		<span onclick="tree(2);"> <i class="icon-plus-sign-alt"></i> Add Audit</span>
+		<span id="menu2" style="display:none;">
+		<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);echo "?S" . $sid;?>" method="post"
 		enctype="multipart/form-data">
-		<br /><label for="file" class="btn small" ><i class="icon-upload-alt" id="upload"></i> Upload</label>
-		<input type="text" name="notes" style="width: 60%;" placeholder="Description">
-		<input type="file" name="file" id="file" style="display:none;" required> 
+		<br />
+		<select name="type">
+		<option value="Contact">Contact</option>
+		<option value="Other">Other</option>
+		</select>
+		<input type="text" name="description" style="width: 60%;" placeholder="Description">
 		<button type="submit" class="btn small" name="submit"  value="Submit">Save</button>  
 		</form>
 		</span><br /><br />
@@ -107,7 +104,7 @@ $row = mysql_fetch_array($result);
 		<tbody>
 
 		<?php
-		$query = sprintf("SELECT * FROM `caudits` WHERE cid = '$cid';");
+		$query = sprintf("SELECT * FROM `saudits` WHERE sid = '$sid' ORDER BY said DESC;");
 		$result = mysql_query($query);
 
 		if (!$result) {
@@ -139,3 +136,7 @@ $row = mysql_fetch_array($result);
 		?>
 		</tbody>
 		</table>
+		</div>
+		</div>
+
+<?php include("footer.php"); ?>

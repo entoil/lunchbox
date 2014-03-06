@@ -17,10 +17,9 @@ if ($_SESSION['type'] != 0) { header('Location: ..'); }
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="../js/kickstart.js"></script>                                  <!-- KICKSTART -->
 </head><body>
-
 <!-- Menu Horizontal -->
 <ul class="menu">
-<li><a href=""><span class="icon" data-icon="R"></span>Lunchbox</a>
+<li><a href=".."><span class="icon" data-icon="R"></span>Lunchbox</a>
 	<ul>
 	<li><a href=""><span class="icon" data-icon="G"></span>Report</a>
 		<ul>
@@ -54,7 +53,9 @@ if ($_SESSION['type'] != 0) { header('Location: ..'); }
 		<li><a href="/class/create.php"><span class="icon" data-icon="J"></span>Class</a></li>
 		</ul>
 	</li>
-	<li class="divider"><a href="logout.php"><span class="icon" data-icon="T"></span>Logout</a></li>
+	<?php if ($_SESSION['type'] == 0) { echo "<li><a href=\"/user\">Users</a></li>"; } ?>
+	
+	<li class="divider"><a href="/logout.php"><span class="icon" data-icon="T"></span>Logout</a></li>
 	</ul>
 </li>
 </ul>

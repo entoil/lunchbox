@@ -1,7 +1,5 @@
 <?php 
 
-
-
 include("header.php"); 
 include("../config.inc");
 if ($_SESSION['type'] != 0) { header('Location: ..'); }
@@ -83,12 +81,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    if (!checkdate((int) $month, (int) $day, (int) $year)) { $error_dob = "<li>Invalid birth date.</li>"; $nerror++; }
    if ($street == "") { $error_address = "<li>Postal Address Required.</li>"; $nerror++; }
 
-    
-
    if ($nerror == 0) {
    		echo "UPDATE students SET `fname`='$fname',`mname`='$mname',`lname`='$lname',`dob`='$year-$month-$day',`street`='$street',`suburb`='$suburb',`postcode`='$postcode',`cname1`='$cname1',`crel1`='$crel1',`cmob1`='$cmobile1',`cemail1`='$cemail1',`cname2`='$cname2',`crel2`='$crel2',`cmob2`='$cmobile2',`cemail2`='$cemail2' WHERE sid = $sid";
    		mysql_query ("UPDATE students SET `fname`='$fname',`mname`='$mname',`lname`='$lname',`dob`='$year-$day-$day',`street`='$street',`suburb`='$suburb',`postcode`='$postcode',`cname1`='$cname1',`crel1`='$crel1',`cmob1`='$cmobile1',`cemail1`='$cemail1',`cname2`='$cname2',`crel2`='$crel2',`cmob2`='$cmobile2',`cemail2`='$cemail2' WHERE sid = $sid");
-   		header('Location: ?S' . $sid);
+   		
+
+      $username = $_SESSION['username'];
+      $query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+      $row = mysql_fetch_array($query);
+      $user = $row['name'];
+      mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Profile', 'Student profile edited', DATE(NOW()), '$user');");
+
+      header('Location: ?S' . $sid);
    }
 }
 

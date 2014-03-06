@@ -1,4 +1,42 @@
-<?php include("header.php");  include("config.inc"); ?>
+<?php include("config.inc"); ?>
+<!DOCTYPE html>
+<html><head>
+<title>Lunchbox</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="" />
+<meta name="copyright" content="" />
+<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" />                  <!-- KICKSTART -->
+<link rel="stylesheet" type="text/css" href="style.css" media="all" />                          <!-- CUSTOM STYLES -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/kickstart.js"></script>                                  <!-- KICKSTART -->
+<style>
+body {
+	margin: 300px;
+}
+#loginbox {
+	border: 1px solid #ccc;
+	background: #FFF; 
+	width: 350px; 
+	height: 250px;
+	margin:auto;
+	padding: 50px;
+}
+table, tr, td {
+	border:none;
+	margin:0;
+	padding:0;
+}
+</style>
+
+</head><body>
+
+<!-- Menu Horizontal -->
+<ul class="menu" style="width: 350px; margin:auto;">
+<li><a href=""><span class="icon" data-icon="R"></span>Lunchbox Login</a></li>
+</ul>
+	
+<!-- ===================================== END HEADER ===================================== -->
 <?php
 session_start();
 if (isset($_SESSION['username'])) {
@@ -39,11 +77,7 @@ function validateinput($data)
 }
 
 ?>
-
-<div class="col_3">	</div>
-<div class="col_5">
-
-	<p><br /><br /><br /><br />
+<div id="loginbox">
 		<?php 
 			if ($nerror > 0) { 
 				echo "<div class=\"notice error\" ><i class=\"icon-remove-sign icon-large\" ></i>Please correct the following error(s):";
@@ -57,18 +91,11 @@ function validateinput($data)
 			}
 		?>
 	<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" name="form"> 
-    <table cellspacing='0' cellpadding='4'>
-    <tr><td>Username:</td><td><input type="text" name="user" size="18" maxlength="25" value='<?php echo $user; ?>' required ></td></tr>
-    <tr><td>Password:</td><td><input type="password" name="pass" size="18" maxlength="25" required></td></tr>
-    </table>
-    <br />
-   	<table>
-    <tr><td><input type="submit" style="margin-left:0" value="Log In"></td>
+    <table height="150px">
+    <tr height="15px"><td>Username:</td><td><input type="text" name="user" size="18" maxlength="25" value='<?php echo $user; ?>' required ></td></tr>
+    <tr height="15px"><td>Password:</td><td><input type="password" name="pass" size="18" maxlength="25" required></td></tr>
+    <tr height="15px"><td colspan="2" style="text-align:center"><input type="submit" value="Log In"></td></tr>
     </table>
 	</form>
-
-	</p><br /><br /><br /><br />
-	
-	
 </div>
-<div class="col_4">	</div>
+</body>

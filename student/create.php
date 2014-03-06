@@ -42,6 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    if ($nerror == 0) {
    		mysql_query ("INSERT INTO students (`fname`,`mname`,`lname`,`dob`,`street`,`suburb`,`postcode`,`cname1`,`crel1`,`cmob1`,`cemail1`,`cname2`,`crel2`,`cmob2`,`cemail2`) VALUES ('$fname','$mname','$lname','$year-$month-$day','$street','$suburb','$postcode', '$cname1', '$crel1', '$cmobile1', '$cemail1', '$cname2', '$crel2', '$cmobile2', '$cemail2')");
 
+		$query = mysql_query("SELECT * FROM students ORDER BY sid DESC LIMIT 1;");
+		$row = mysql_fetch_array($query);
+		$sid = $row['sid'];
+
+		$username = $_SESSION['username'];
+		$query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+		$row = mysql_fetch_array($query);
+		$user = $row['name'];
+   		mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Create', 'Student profile created', DATE(NOW()), '$user');");
+
    		$fname = $mname = $lname = $day = $month = $year = $street = $suburb = $postcode = "";
 		$error_fname = $error_lname = $error_dob = $error_address = "";
 		$cname1 = $crel1 = $cmobile1 = $cemail1 = $cname2 = $crel2 = $cmobile2 = $cemail2 = "";
@@ -81,7 +91,7 @@ function validateinput($data)
 				echo $error_address;
 				echo "<a href=\"#close\" class=\"icon-remove\"></a></div>";
 			} else if ($nerror == 0) {
-				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> $image Student has been successfully registered.
+				echo "<div class=\"notice success\"><i class=\"icon-ok icon-large\"></i> Student <a href=\"/student/?S$sid\">S$sid</a> has been successfully registered.
 <a href=\"#close\" class=\"icon-remove\"></a></div>";
 			}
 		?>

@@ -2,6 +2,7 @@
 include("../config.inc");
 session_start();
 if (!isset($_SESSION['username'])) { header('Location: ..'); }
+$sid = substr($_SERVER['QUERY_STRING'], -5);
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +20,7 @@ if (!isset($_SESSION['username'])) { header('Location: ..'); }
 
 <!-- Menu Horizontal -->
 <ul class="menu">
-<li><a href=""><span class="icon" data-icon="R"></span>Lunchbox</a>
+<li><a href=".."><span class="icon" data-icon="R"></span>Lunchbox</a>
 	<ul>
 	<li><a href=""><span class="icon" data-icon="G"></span>Report</a>
 		<ul>
@@ -53,7 +54,9 @@ if (!isset($_SESSION['username'])) { header('Location: ..'); }
 		<li><a href="/class/create.php"><span class="icon" data-icon="J"></span>Class</a></li>
 		</ul>
 	</li>
-	<li class="divider"><a href="logout.php"><span class="icon" data-icon="T"></span>Logout</a></li>
+	<?php if ($_SESSION['type'] == 0) { echo "<li><a href=\"/user\">Users</a></li>"; } ?>
+	
+	<li class="divider"><a href="/logout.php"><span class="icon" data-icon="T"></span>Logout</a></li>
 	</ul>
 </li>
 </ul>

@@ -40,6 +40,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
    if ($nerror == 0) {
    		$sid = $student;
    		mysql_query ("INSERT INTO enrolments (`sid`,`cid`,`start`,`end`,`owe`) VALUES ( $student , $class,'$syear-$smonth-$sday','$eyear-$emonth-$eday','$owe')");
+       
+		$query = mysql_query("SELECT * FROM enrolments ORDER BY eid DESC LIMIT 1;");
+		$row = mysql_fetch_array($query);
+		$eid = $row['eid'];
+
+		$username = $_SESSION['username'];
+		$query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+		$row = mysql_fetch_array($query);
+		$user = $row['name'];
+		mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Enrol', '<a href=/enrolment/?E$eid>E$eid</a> created', DATE(NOW()), '$user');");
 
    		$student = $class = $sday = $smonth = $syear = $eday = $emonth = $eyear = $owe = "";
 		$error_student = $error_class = $error_start = $error_end = $error_invalid = $error_owe = $error_exist = "";

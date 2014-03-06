@@ -41,9 +41,9 @@
 			<?php
 
 				if (file_exists("photo/" . $sid . ".jpg")) {
-					echo "<img src=\"photo/" . $sid . ".jpg\" width=\"60%\" height=\"60%\" /><br />";
+					echo "<img src=\"photo/" . $sid . ".jpg\" style=\"border: 1px solid #e5e5e5; height: 230px\"/><br />";
 				} else {
-					echo "<img src=\"photo/s12345.jpg\" width=\"60%\" height=\"60%\" /><br />";
+					echo "<img src=\"photo/s12345.jpg\" style=\"border: 1px solid #e5e5e5; height: 230px\"/><br />";
 				}
 
 			?>

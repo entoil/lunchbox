@@ -1,5 +1,9 @@
 <?php include("header.php"); include("../config.inc"); ?>
-
+<script type="text/javascript">
+function confirm_alert(node) {
+return confirm("Are you sure you want to cancel and remove this enrolment?");
+}
+</script>
 <div class="col_12">
 
 	<ul class="tabs left">
@@ -51,8 +55,8 @@
 		</div>
 		<div class="col_4" style="text-align: right;">
 
-			<a href="edit.php?E<?php echo $eid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
-			<a href="delete.php?E<?php echo $eid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-remove" ></i> Cancel</button></a>
+			<a href="edit.php?E<?php echo $eid; ?>"><button class="small" style="position: relative; top: -65px; left: 27px; " <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
+			<a href="delete.php?E<?php echo $eid; ?>" onClick='return confirm_alert(this);'><button class="small" style="position: relative; top: -65px; left: 27px; " <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-remove" ></i> Cancel</button></a>
 			
 		</div>
 

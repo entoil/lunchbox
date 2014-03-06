@@ -1,3 +1,20 @@
+<?php include("header.php"); include("../config.inc"); ?>
+<script type="text/javascript">
+function confirm_alert(node) {
+return confirm("Are you sure you want to delete this document?");
+}
+</script>
+<div class="col_12">
+
+	<ul class="tabs left">
+	<li><a href="/student/?S<?php echo $sid?>">Student</a></li>
+	<li  class="current"><a href="document.php?S<?php echo $sid?>">Documents</a></li>
+	<li><a href="audit.php?S<?php echo $sid?>">Audit</a></li>
+	</ul>
+
+	<div id="document" class="tab-content">
+
+
 <script>
 flag = new Array();
 function tree(num){
@@ -58,6 +75,13 @@ if ((($_FILES["file"]["type"] == "image/gif")
 
 
       mysql_query ("INSERT INTO documents (`sid`,`name`, `uploaded`, `uploader`, `notes`) VALUES ($sid, '$name', DATE(NOW()), '$uploader', '$notes')");
+
+	$username = $_SESSION['username'];
+	$query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+	$row = mysql_fetch_array($query);
+	$user = $row['name'];
+	mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Document', '$name uploaded', DATE(NOW()), '$user');");
+
       }
     }
   }
@@ -150,11 +174,11 @@ function validateinput($data)
 				$date = new DateTime($row['uploaded']);
 				echo "<tr>";
 				echo "<td>D" . $row['did'] . "</td>";
-				echo "<td><a href='document/S" . $row['sid'] . "/" . $row['name'] . "'>" . $row['name'] . "</td>";
+				echo "<td><a href='document/S" . $row['sid'] . "/" . $row['name'] . "' target=\"_blank\">" . $row['name'] . "</td>";
 				echo "<td>" . $date->format("d/m/Y") . "</td>";
 				echo "<td>" . $row['uploader'] . "</td>";
 				echo "<td>" . $row['notes'] . "</td>";
-				echo "<td><a href='document/delete.php?" . $row['did'] . "'><i class=\"icon-remove\"></i></td>";
+				echo "<td><a href='document/delete.php?" . $row['did'] . "'  onClick='return confirm_alert(this);'><i class=\"icon-remove\"></i></td>";
 				echo "</tr>\n";
 			}
 			echo "</table>";
@@ -164,3 +188,7 @@ function validateinput($data)
 		?>
 		</tbody>
 		</table>
+				</div>
+		</div>
+
+<?php include("footer.php"); ?>

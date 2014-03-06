@@ -1,7 +1,6 @@
 <?php 
 include("header.php"); 
 include("../config.inc");
-if ($_SESSION['type'] != 0) { header('Location: ..'); }
 
 $sday = $smonth = $syear = $eday = $emonth = $eyear = "";
 $error_start = $error_end = "";

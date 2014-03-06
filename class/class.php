@@ -33,15 +33,16 @@
 		</div>
 		<div class="col_4" style="text-align: right;">
 
-			<a href="edit.php?C<?php echo $cid; ?>"><button class="medium" <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
+			<a href="edit.php?C<?php echo $cid; ?>"><button class="small" style="position: relative; top: -65px; left: 27px; " <?php if ($_SESSION['type'] != 0) { echo "disabled='disabled'";} ?>><i class="icon-pencil" ></i> Edit</button></a>
 			
 		</div>
 
 		<table cellspacing="0" cellpadding="0" class="striped sortable">
 	<thead><tr>
-		<th>Number:</th>
+		<th width="100px">Number:</th>
+		<th width="100px">Enrolment:</th>
 		<th>Name:</th>
-		<th>Enrolment:</th>
+		<th>Start:</th>
 		<th>End:</th>
 	</tr></thead>
 	<?php
@@ -67,15 +68,16 @@
 				echo "<tr>";
 				echo "<td>
 				<a href='/student?S" . $row['sid'] . "'>S" . $row['sid'] . "</td>
-				<td>" . $row['fname'] . " " .  $row['mname'] . " " . $row['lname'] . "</td>
 				<td><a href='/enrolment?E" . $row['eid'] . "'>E" . $row['eid'] . "</td>
+				<td>" . $row['fname'] . " " .  $row['mname'] . " " . $row['lname'] . "</td>
+				<td>" . $stime->format("d/m/Y") . "</td>
 				<td>" . $etime->format("d/m/Y") . "</td>";
 				
 				echo "</tr>\n";
 			}
-			echo "</table>";
+			
 		
 		}
 		mysql_free_result($result);
-
+		echo "</table>";
 		?>

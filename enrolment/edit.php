@@ -5,6 +5,10 @@ include("../config.inc");
 if ($_SESSION['type'] != 0) { header('Location: ..'); }
 $eid = substr($_SERVER['QUERY_STRING'], -3);
 
+$query = mysql_query("SELECT * FROM enrolments WHERE eid = $eid");
+$row = mysql_fetch_array($query);
+$sid = $row['sid'];
+
 $sday = $smonth = $syear = $eday = $emonth = $eyear = $owe = "";
 $error_start = $error_end = $error_invalid = $error_owe = "";
 
@@ -33,9 +37,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     }
 
    if ($nerror == 0) {
-   		echo "UPDATE enrolments SET `start`='$syear-$smonth-$sday', `end`='$eyear-$emonth-$eday', `owe`='$owe' WHERE eid = $eid";
-   		mysql_query ("UPDATE enrolments SET `start`='$syear-$smonth-$sday', `end`='$eyear-$emonth-$eday', `owe`='$owe' WHERE eid = $eid");
-   		header('Location: ?E' . $eid);
+   		
+
+      $username = $_SESSION['username'];
+      $query = mysql_query("SELECT * FROM users WHERE username = '$username'");
+      $row = mysql_fetch_array($query);
+      $user = $row['name'];
+
+
+      $query = "SELECT * FROM enrolments WHERE eid = $eid";
+      $result = mysql_query($query);
+      $row = mysql_fetch_assoc($result);
+      $stime = substr($row['start'], -2) . "/" . substr($row['start'], 5, 2) . "/" . substr($row['start'], 0, 4);
+      $stimeafter = $sday . "/" . $smonth . "/" . $syear;
+      $etime = substr($row['end'], -2) . "/" . substr($row['end'], 5, 2) . "/" . substr($row['end'], 0, 4);
+      $etimeafter = $eday . "/" . $emonth . "/" . $eyear;
+      $original_owe = $row['owe'];
+
+      if ($original_owe != $owe) {
+        mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Enrol', '<a href=/enrolment/?E$eid>E$eid</a>: Owe amount from \$$original_owe to \$$owe', DATE(NOW()), '$user');");
+      }
+
+      if ($stime != $stimeafter) {
+        mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Enrol', '<a href=/enrolment/?E$eid>E$eid</a>: Start date from $stime to $sday/$smonth/$syear', DATE(NOW()), '$user');");
+      }
+
+      if ($etime != $etimeafter) {
+        mysql_query ("INSERT INTO `saudits` (`sid`, `type`, `description`, `date`, `by`) VALUES ($sid, 'Enrol', '<a href=/enrolment/?E$eid>E$eid</a>: End date from $etime to $eday/$emonth/$eyear', DATE(NOW()), '$user');");
+      }
+
+      mysql_query ("UPDATE enrolments SET `start`='$syear-$smonth-$sday', `end`='$eyear-$emonth-$eday', `owe`='$owe' WHERE eid = $eid");
+      //header('Location: /enrolment/?E' . $eid);
    }
 }
 
@@ -50,7 +82,6 @@ function validateinput($data)
 ?>
 	 
 <div class="col_12">
-
 	<ul class="tabs left">
 	<li><a href="#student">Student</a></li>
 	</ul>
