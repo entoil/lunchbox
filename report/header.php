@@ -18,7 +18,7 @@ if (!isset($_SESSION['username'])) { header('Location: ..'); }
 </head><body>
 <!-- Menu Horizontal -->
 <ul class="menu">
-<li><a href=".."><span class="icon" data-icon="R"></span>Lunchbox</a>
+<li><a href=".." style="text-transform: uppercase; font-weight: bold; letter-spacing: 2px;"><span class="icon" data-icon="R"></span>Lunchbox</a>
 	<ul>
 	<li><a href=""><span class="icon" data-icon="G"></span>Report</a>
 		<ul>

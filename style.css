@@ -167,3 +167,7 @@ display:block;
 	 left: 27px;
 	 border: 1px solid #CCC;
 }
+
+.title {
+	color: red;
+}

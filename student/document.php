@@ -144,7 +144,6 @@ function validateinput($data)
 
 		<table cellspacing="0" cellpadding="0">
 		<thead><tr>
-			<th>ID</th>
 			<th>Name</th>
 			<th>Uploaded</th>
 			<th>By</th>
@@ -173,7 +172,6 @@ function validateinput($data)
 			{
 				$date = new DateTime($row['uploaded']);
 				echo "<tr>";
-				echo "<td>D" . $row['did'] . "</td>";
 				echo "<td><a href='document/S" . $row['sid'] . "/" . $row['name'] . "' target=\"_blank\">" . $row['name'] . "</td>";
 				echo "<td>" . $date->format("d/m/Y") . "</td>";
 				echo "<td>" . $row['uploader'] . "</td>";

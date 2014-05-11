@@ -1,9 +1,9 @@
 <?php
 
-$hostname = 'localhost'; 
-$dbname   = 'lunchbox'; 
-$username = 'root';
-$password = ''; 
+$hostname = 'mysql16.000webhost.com'; 
+$dbname   = 'a7243305_db'; 
+$username = 'a7243305_admin';
+$password = 'bahbah12'; 
 
 mysql_connect($hostname, $username, $password) or DIE('Connection to host is failed, perhaps the service is down!');
 

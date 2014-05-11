@@ -13,7 +13,7 @@
 </head><body>
 <!-- Menu Horizontal -->
 <ul class="menu">
-<li><a href=".."><span class="icon" data-icon="R"></span>Lunchbox</a>
+<li><a href=".." style="text-transform: uppercase; font-weight: bold; letter-spacing: 2px;"><span class="icon" data-icon="R"></span>Lunchbox</a>
 	<ul>
 	<li><a href=""><span class="icon" data-icon="G"></span>Report</a>
 		<ul>
@@ -53,7 +53,10 @@
 	</ul>
 </li>
 </ul>
-<div class="right" id="search"><input id="text1" type="text" /> <button class="small"><i class="icon-search"></i> Search</button></div>
+<form name="input" action="search" method="get">
+<div class="right" id="search"><input id="q" name="q" type="text" /> 
+<button type="submit" type="submit" class="small"><i class="icon-search"></i> Search</button></div>
+</form>
 <div class="grid">
 	
 <!-- ===================================== END HEADER ===================================== -->
